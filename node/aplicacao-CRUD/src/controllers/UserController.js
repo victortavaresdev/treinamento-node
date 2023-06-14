@@ -1,23 +1,16 @@
-const database = require("../config/database");
-const { randomUUID } = require("crypto");
+const { CreateUser } = require("../services/user/create-user.service");
+const { DeleteUser } = require("../services/user/delete-user.service");
+const { GetUser } = require("../services/user/get-user.service");
+const { UpdateUser } = require("../services/user/update-user.service");
 
 class UserController {
   async create(request, response) {
     // Corpo da requisição (Dados do Front-end)
     const body = request.body;
 
-    // SQL para inserir os dados no banco de dados
-    const sql = `
-      INSERT INTO users (id, name, email)
-      VALUES ('${randomUUID()}','${body.name}', '${body.email}')
-  `;
-
-    // Estabelece conexão com o banco de dados
-    const client = await database.connect();
-
-    // Faz a consulta no banco de dados através do método query()
-    await client.query(sql);
-    await client.end();
+    // Passa o BODY para Service
+    const createUser = new CreateUser();
+    await createUser.execute(body);
 
     // Resposta do servidor a requisição do Front-end
     response.status(201).json();
@@ -27,61 +20,35 @@ class UserController {
     // ID do registro do usuário
     const { id } = request.params;
 
-    // SQL para buscar os dados de um usuário no banco de dados
-    const sql = `
-        SELECT * FROM users WHERE id = '${id}'
-    `;
-
-    // Estabelece conexão com o banco de dados
-    const client = await database.connect();
-
-    // Faz a consulta no banco de dados através do método query()
-    const queryResult = await client.query(sql);
-    await client.end();
+    // Passa o ID para o Service
+    const getUser = new GetUser();
+    const { queryResult } = await getUser.execute(id);
 
     // Resposta do servidor a requisição do Front-end
     response.status(200).json({ data: queryResult.rows[0] });
   }
 
   async update(request, response) {
-    // ID do registro do usuário
+    // ID de registro do usuário
     const { id } = request.params;
     // Corpo da requisição (Dados do Front-end)
     const body = request.body;
 
-    // SQL para atualizar os dados de um usuário no banco de dados
-    const sql = `
-        UPDATE users 
-        SET name = '${body.name}', email = '${body.email}'
-        WHERE id = '${id}'
-    `;
-
-    // Estabelece conexão com o banco de dados
-    const client = await database.connect();
-
-    // Faz a consulta no banco de dados através do método query()
-    await client.query(sql);
-    await client.end();
+    // Passa o ID e o BODY para o Service
+    const updateUser = new UpdateUser();
+    await updateUser.execute(id, body);
 
     // Resposta do servidor a requisição do Front-end
     response.status(200).json();
   }
 
   async delete(request, response) {
-    // ID do registro do usuário
+    // ID de registro do usuário
     const { id } = request.params;
 
-    // SQL para deletar os dados de um usuário no banco de dados
-    const sql = `
-        DELETE FROM users WHERE id = '${id}'
-    `;
-
-    // Estabelece conexão com o banco de dados
-    const client = await database.connect();
-
-    // Faz a consulta no banco de dados através do método query()
-    await client.query(sql);
-    await client.end();
+    // Passa o ID para o Service
+    const deleteUser = new DeleteUser();
+    await deleteUser.execute(id);
 
     // Resposta do servidor a requisição do Front-end
     response.status(204).json();
