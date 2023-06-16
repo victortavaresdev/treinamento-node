@@ -1,16 +1,16 @@
-const { CreateUser } = require("../services/user/create-user.service");
-const { DeleteUser } = require("../services/user/delete-user.service");
-const { GetUser } = require("../services/user/get-user.service");
-const { UpdateUser } = require("../services/user/update-user.service");
+const { CreatePost } = require("../services/post/create-post.service");
+const { DeletePost } = require("../services/post/delete-post.service");
+const { GetPost } = require("../services/post/get-post.service");
+const { UpdatePost } = require("../services/post/update-post.service");
 
-class UserController {
+class PostController {
   async create(request, response, next) {
     // Corpo da requisição (Dados do Front-end)
     const body = request.body;
 
     // Passa o BODY para Service
-    const createUser = new CreateUser();
-    await createUser.execute(body, next);
+    const createPost = new CreatePost();
+    await createPost.execute(body, next);
 
     // Resposta do servidor a requisição do Front-end
     response.status(201).json();
@@ -21,8 +21,8 @@ class UserController {
     const { id } = request.params;
 
     // Passa o ID para o Service
-    const getUser = new GetUser();
-    const { queryResult } = await getUser.execute(id);
+    const getPost = new GetPost();
+    const { queryResult } = await getPost.execute(id);
 
     // Resposta do servidor a requisição do Front-end
     response.status(200).json({ data: queryResult.rows[0] });
@@ -35,8 +35,8 @@ class UserController {
     const body = request.body;
 
     // Passa o ID e o BODY para o Service
-    const updateUser = new UpdateUser();
-    await updateUser.execute(id, body);
+    const updatePost = new UpdatePost();
+    await updatePost.execute(id, body);
 
     // Resposta do servidor a requisição do Front-end
     response.status(200).json();
@@ -47,8 +47,8 @@ class UserController {
     const { id } = request.params;
 
     // Passa o ID para o Service
-    const deleteUser = new DeleteUser();
-    await deleteUser.execute(id);
+    const deletePost = new DeletePost();
+    await deletePost.execute(id);
 
     // Resposta do servidor a requisição do Front-end
     response.status(204).json();
@@ -56,5 +56,5 @@ class UserController {
 }
 
 module.exports = {
-  UserController,
+  PostController,
 };
