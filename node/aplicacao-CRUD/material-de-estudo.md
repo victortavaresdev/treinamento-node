@@ -4,7 +4,7 @@
 
 # Documentação do Validatorjs
 
-- https://github.com/validatorjs/validator.js
+- https://github.com/mikeerickson/validatorjs#readme
 
 # Tratamento de erros no Express.js
 
